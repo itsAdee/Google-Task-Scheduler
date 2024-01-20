@@ -1,5 +1,4 @@
 const {google} = require('googleapis');
-const TASK_LIST_NAME = process.env.TASK_LIST_NAME;
 
 let cache = {};
 
@@ -8,15 +7,12 @@ async function fetchTasks(auth) {
   const res = await service.tasklists.list();
   const taskLists = res.data.items;
   if (taskLists && taskLists.length) {
-    const taskList = taskLists.find(taskList => taskList.title === TASK_LIST_NAME);
-    if (taskList) {
+    for (const taskList of taskLists) {
       const tasksRes = await service.tasks.list({tasklist: taskList.id, showHidden: true});
       const tasks = tasksRes.data.items;
       if (tasks && tasks.length) {
-        cache = tasks;
+        cache[taskList.title] = tasks;
       }
-    } else {
-      throw new Error(`No task list found with the name ${TASK_LIST_NAME}`);
     }
   } else {
     throw new Error('No task lists found');

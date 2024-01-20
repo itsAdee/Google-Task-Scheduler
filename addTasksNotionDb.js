@@ -5,9 +5,8 @@ dotenv.config();
 const notion = new Client({ auth: process.env.NOTION_API_KEY });
 const databaseId = process.env.NOTION_DATABASE_ID;
 
-async function addToDatabase(databaseId,TitleId ,Title, Details, Status, Deadline ,CreatedDate, Completion) {
+async function addToDatabase(databaseId,TaskListName,TitleId ,Title, Details, Status, Deadline ,CreatedDate, Completion) {
     try {
-        TasklistName = process.env.TASK_LIST_NAME;
         const response = await notion.pages.create({
             parent: {
                 database_id: databaseId,
@@ -75,7 +74,7 @@ async function addToDatabase(databaseId,TitleId ,Title, Details, Status, Deadlin
                     {
                         type: 'text',
                         text: {
-                            content: TasklistName,
+                            content: TaskListName,
                         },
                     },
                     ],
