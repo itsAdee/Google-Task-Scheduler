@@ -8,9 +8,8 @@ The application uses the following environment variables, which are defined in a
 
 - `NOTION_API_KEY`: The API key for the Notion API.
 - `NOTION_DATABASE_ID`: The ID of the Notion database where tasks will be stored.
-- `TASK_LIST_NAME`= The Name of the task List
 
-These keys are crucial for the application to interact with the Notion API and the specific Task List ,Notion database.
+These keys are crucial for the application to interact with the Notion API and the specific Notion database.
 
 ## Google Authentication
 
