@@ -3,6 +3,7 @@ const authorize = require('./googleAuth');
 const fetchTasks = require('./fetchRequests');
 const addToDatabase = require('./addTasksNotionDb');
 const queryDatabase = require('./queryNotionDb');
+const cron = require('node-cron');
 const databaseId = process.env.NOTION_DATABASE_ID;
 
 async function handleTask(TitleId, Title, Details, Status, Deadline, CreatedDate, Completion) {
@@ -10,18 +11,18 @@ async function handleTask(TitleId, Title, Details, Status, Deadline, CreatedDate
       const pageId = await queryDatabase(databaseId, TitleId);
       if (!pageId) {
           await addToDatabase(databaseId, TitleId, Title, Details, Status, Deadline, CreatedDate, Completion);
-          console.log('Task added to the database');
+          console.log(`Task ${TitleId} added in the database`);
       } else {
-          console.log('Task already exists in the database');
+          console.log(`Task ${TitleId} already exists in the database`);
       }
   } catch (error) {
       console.error(error);
   }
 }
 
-authorize()
-  .then(fetchTasks)
-  .then(tasks => {
+async function CheckTasks() {
+  try {
+    const tasks = await authorize().then(fetchTasks);
     tasks.forEach((task) => {
       const TitleId = task.id;
       const Title = task.title;
@@ -32,5 +33,14 @@ authorize()
       const Completion = Status === 'completed';
       handleTask(TitleId, Title, Details, Status, Deadline, CreatedDate, Completion);
     });
-  })
-  .catch(console.error);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Schedule tasks to run every 2 minutes
+cron.schedule('*/2 * * * *', () => {
+  console.log(`Running task at ${new Date().toISOString()}`);
+  CheckTasks();
+  
+});

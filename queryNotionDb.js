@@ -22,8 +22,4 @@ async function queryDatabase(databaseId, TaskId) {
     }
 }
 
-queryDatabase(databaseId, 'dDJJb01nbDJwSkw0LUNrZA').then((pageId) => {
-    console.log(pageId);
-});
-
 module.exports = queryDatabase;

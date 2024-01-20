@@ -7,6 +7,7 @@ const databaseId = process.env.NOTION_DATABASE_ID;
 
 async function addToDatabase(databaseId,TitleId ,Title, Details, Status, Deadline ,CreatedDate, Completion) {
     try {
+        TasklistName = process.env.TASK_LIST_NAME;
         const response = await notion.pages.create({
             parent: {
                 database_id: databaseId,
@@ -68,6 +69,17 @@ async function addToDatabase(databaseId,TitleId ,Title, Details, Status, Deadlin
                     type: 'checkbox',
                     checkbox: Completion
                 },
+                'Task List Name': {
+                    type: 'rich_text',
+                    rich_text: [
+                    {
+                        type: 'text',
+                        text: {
+                            content: TasklistName,
+                        },
+                    },
+                    ],
+                },
             }    
         });
         console.log(response);
@@ -75,7 +87,5 @@ async function addToDatabase(databaseId,TitleId ,Title, Details, Status, Deadlin
         console.error(error.body);
     }
 }
-
-addToDatabase(databaseId, "SnBPNDU1V0R0S1B0Wk9oZA'", "DO COMM Skills Revision", "Write 5 points", "needsAction", "2022-03-29", "2022-01-19",false);
 
 module.exports = addToDatabase;
