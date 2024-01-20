@@ -15,7 +15,11 @@ async function fetchTasks(auth) {
       if (tasks && tasks.length) {
         cache = tasks;
       }
+    } else {
+      throw new Error(`No task list found with the name ${TASK_LIST_NAME}`);
     }
+  } else {
+    throw new Error('No task lists found');
   }
   return cache;
 }

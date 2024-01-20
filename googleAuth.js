@@ -31,19 +31,25 @@ async function saveCredentials(client) {
   await fs.writeFile(TOKEN_PATH, payload);
 }
 
+let isFirstRun = true;
+
 async function authorize() {
-  let client = await loadSavedCredentialsIfExist();
-  if (client) {
-    return client;
-  }
-  client = await authenticate({
-    scopes: SCOPES,
-    keyfilePath: CREDENTIALS_PATH,
-  });
-  if (client.credentials) {
-    await saveCredentials(client);
+  let client;
+  if (isFirstRun) {
+    client = await authenticate({
+      scopes: SCOPES,
+      keyfilePath: CREDENTIALS_PATH,
+    });
+    if (client.credentials) {
+      await saveCredentials(client);
+    }
+    isFirstRun = false;
+  } else {
+    client = await loadSavedCredentialsIfExist();
+    if (!client) {
+      throw new Error('Failed to load saved credentials');
+    }
   }
   return client;
 }
-
 module.exports = authorize;
