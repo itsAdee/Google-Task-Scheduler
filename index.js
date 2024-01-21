@@ -55,6 +55,6 @@ async function CheckTasks() {
 // Schedule tasks to run every 2 minutes
 cron.schedule('*/2 * * * *', () => {
   // Log the time when the task is run
-  console.log(`Running task at ${new Date().toISOString()}`);
+  console.log(`Running task at ${new Date().toLocaleTimeString()}`);
   CheckTasks();
 });
